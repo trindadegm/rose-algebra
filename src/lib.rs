@@ -1,14 +1,164 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+pub mod vector;
+
+pub use vector::Vector;
+pub type Vector2 = vector::Vector<2, f32>;
+pub type Vector3 = vector::Vector<3, f32>;
+pub type Vector4 = vector::Vector<4, f32>;
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn vector_add_sub_test() {
+        let a = Vector3::new([0.0, 1.0, 2.0]);
+        let b = Vector3::new([-2.0, 3.0, -4.0]);
+        let c = Vector3::new([0.0 - 2.0, 1.0 + 3.0, 2.0 - 4.0]);
+
+        assert_eq!(a + b, c);
+        assert_eq!(c - b, a);
+        assert_eq!(c - a, b);
+
+        let mut a2 = a;
+        let mut c2 = c;
+        let mut c3 = c;
+
+        a2 += b;
+        c2 -= b;
+        c3 -= a;
+
+        assert_eq!(a2, c);
+        assert_eq!(c2, a);
+        assert_eq!(c3, b);
+    }
+
+    #[test]
+    fn vector_length_test() {
+        let v2_a = Vector2::new([1.0, 1.0]);
+        let v2_b = Vector2::new([1.0, -1.0]);
+
+        assert_eq!(v2_a.length(), f32::sqrt(2.0));
+        assert_eq!(v2_b.length(), f32::sqrt(2.0));
+        assert_eq!(v2_a.length_squared(), 2.0);
+        assert_eq!(v2_b.length_squared(), 2.0);
+
+        let v3_a = Vector3::new([1.0, 2.0, 3.5]);
+        let v4_a = Vector4::new([3.0, 4.0, 5.0, -6.0]);
+
+        assert_eq!(v3_a.length(), f32::sqrt(1.0 + 4.0 + (3.5 * 3.5)));
+        assert_eq!(v3_a.length_squared(), 1.0 + 4.0 + (3.5 * 3.5));
+        assert_eq!(
+            v4_a.length(),
+            f32::sqrt((3.0 * 3.0) + (4.0 * 4.0) + (5.0 * 5.0) + (-6.0 * -6.0))
+        );
+        assert_eq!(
+            v4_a.length_squared(),
+            (3.0 * 3.0) + (4.0 * 4.0) + (5.0 * 5.0) + (-6.0 * -6.0)
+        );
+    }
+
+    #[test]
+    fn vector_scaling_test() {
+        let v2_a = Vector2::new([1.0, 1.0]);
+        let v3_a = Vector3::new([1.0, 2.0, 3.5]);
+        let v4_a = Vector4::new([3.0, 4.0, 5.0, -6.0]);
+
+        assert_eq!(v2_a * 2.0, Vector2::new([2.0, 2.0]));
+        assert_eq!(v2_a / 3.0, Vector2::new([1.0 / 3.0, 1.0 / 3.0]));
+
+        assert_eq!(v3_a * 2.0, Vector3::new([2.0, 4.0, 3.5 * 2.0]));
+        assert_eq!(v3_a / 3.0, Vector3::new([1.0 / 3.0, 2.0 / 3.0, 3.5 / 3.0]));
+
+        assert_eq!(
+            v4_a * 2.0,
+            Vector4::new([3.0 * 2.0, 4.0 * 2.0, 5.0 * 2.0, -6.0 * 2.0])
+        );
+        assert_eq!(
+            v4_a / 3.0,
+            Vector4::new([3.0 / 3.0, 4.0 / 3.0, 5.0 / 3.0, -6.0 / 3.0])
+        );
+
+        let mut v2_a_2 = v2_a;
+        let mut v2_a_3 = v2_a;
+
+        v2_a_2 *= 2.0;
+        v2_a_3 /= 3.0;
+
+        assert_eq!(v2_a_2, Vector2::new([2.0, 2.0]));
+        assert_eq!(v2_a_3, Vector2::new([1.0 / 3.0, 1.0 / 3.0]));
+
+        let mut v3_a_2 = v3_a;
+        let mut v3_a_3 = v3_a;
+
+        v3_a_2 *= 2.0;
+        v3_a_3 /= 3.0;
+
+        assert_eq!(v3_a_2, Vector3::new([2.0, 4.0, 3.5 * 2.0]));
+        assert_eq!(v3_a_3, Vector3::new([1.0 / 3.0, 2.0 / 3.0, 3.5 / 3.0]));
+
+        let mut v4_a_2 = v4_a;
+        let mut v4_a_3 = v4_a;
+
+        v4_a_2 *= 2.0;
+        v4_a_3 /= 3.0;
+
+        assert_eq!(
+            v4_a_2,
+            Vector4::new([3.0 * 2.0, 4.0 * 2.0, 5.0 * 2.0, -6.0 * 2.0])
+        );
+        assert_eq!(
+            v4_a_3,
+            Vector4::new([3.0 / 3.0, 4.0 / 3.0, 5.0 / 3.0, -6.0 / 3.0])
+        );
+    }
+
+    #[test]
+    fn vector_product_test() {
+        let v2_a = Vector2::new([4.1, 4.2]);
+        let v2_b = Vector2::new([5.3, 5.4]);
+        let v2_dot = v2_a.x() * v2_b.x() + v2_a.y() * v2_b.y();
+
+        assert_eq!(v2_a.dot(v2_b), v2_dot);
+        assert_eq!(v2_b.dot(v2_a), v2_dot);
+
+        let v3_a = Vector3::new([1.0, 2.0, 3.5]);
+        let v3_b = Vector3::new([-2.1, 2.3, -3.4]);
+        let v3_dot = v3_a.x() * v3_b.x() + v3_a.y() * v3_b.y() + v3_a.z() * v3_b.z();
+        let v3_ab_cross = Vector3::new([-14.85, -3.95, 6.5]);
+        let v3_ba_cross = Vector3::new([14.85, 3.95, -6.5]);
+
+        assert_eq!(v3_a.dot(v3_b), v3_dot);
+        assert_eq!(v3_b.dot(v3_a), v3_dot);
+        assert!((v3_a.cross(v3_b) - v3_ab_cross)
+            .data()
+            .into_iter()
+            .all(|x| x.abs() < 0.0001));
+        assert!((v3_b.cross(v3_a) - v3_ba_cross)
+            .data()
+            .into_iter()
+            .all(|x| x.abs() < 0.0001));
+
+        let v4_a = Vector4::new([3.0, 4.0, 5.0, -6.0]);
+        let v4_b = Vector4::new([2.0, 3.0, -4.0, -5.0]);
+        let v4_dot =
+            v4_a.x() * v4_b.x() + v4_a.y() * v4_b.y() + v4_a.z() * v4_b.z() + v4_a.w() * v4_b.w();
+
+        assert_eq!(v4_a.dot(v4_b), v4_dot);
+        assert_eq!(v4_b.dot(v4_a), v4_dot);
+    }
+
+    #[test]
+    fn vector_normalized_test() {
+        let v2_a = Vector2::new([1.0, 1.0]);
+
+        let v3_a = Vector3::new([1.0, 2.0, 3.5]);
+        let v3_b = Vector3::new([0.0, 0.0, 0.0]);
+
+        let v4_a = Vector4::new([3.0, 4.0, 5.0, -6.0]);
+
+        assert_eq!(v2_a.normalized(), v2_a / v2_a.length());
+        assert_eq!(v3_a.normalized(), v3_a / v3_a.length());
+        assert_eq!(v3_b.normalized(), Vector::new([0.0, 0.0, 0.0]));
+        assert_eq!(v4_a.normalized(), v4_a / v4_a.length());
     }
 }
