@@ -11,7 +11,7 @@ pub struct Vector<const N: usize, T>([T; N]);
 
 impl<const N: usize, T> Vector<N, T> {
     #[inline]
-    pub fn new(values: [T; N]) -> Self {
+    pub const fn new(values: [T; N]) -> Self {
         Self(values)
     }
 
@@ -19,6 +19,11 @@ impl<const N: usize, T> Vector<N, T> {
     #[inline(always)]
     pub fn data(&self) -> &[T; N] {
         &self.0
+    }
+
+    #[inline(always)]
+    pub fn take_data(self) -> [T; N] {
+        self.0
     }
 }
 impl<const N: usize, T> Default for Vector<N, T>
@@ -131,7 +136,7 @@ where
 
 // Multiply by scalar
 
-macro_rules! impl_op {
+macro_rules! impl_scalar_op {
     ($trait_name:ident, $opname:ident) => {
         impl<const N: usize, T, S> $trait_name<S> for Vector<N, T>
         where
@@ -167,8 +172,8 @@ macro_rules! impl_op {
     };
 }
 
-impl_op!(Mul, mul);
-impl_op!(Div, div);
+impl_scalar_op!(Mul, mul);
+impl_scalar_op!(Div, div);
 
 // With Assign
 

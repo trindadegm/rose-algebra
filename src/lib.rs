@@ -1,9 +1,14 @@
 pub mod vector;
+pub mod matrix;
 
 pub use vector::Vector;
-pub type Vector2 = vector::Vector<2, f32>;
-pub type Vector3 = vector::Vector<3, f32>;
-pub type Vector4 = vector::Vector<4, f32>;
+pub type Vector2 = Vector<2, f32>;
+pub type Vector3 = Vector<3, f32>;
+pub type Vector4 = Vector<4, f32>;
+
+pub use matrix::Matrix;
+pub type Matrix3 = Matrix<3, 3, f32>;
+pub type Matrix4 = Matrix<4, 4, f32>;
 
 #[cfg(test)]
 mod tests {
@@ -160,5 +165,115 @@ mod tests {
         assert_eq!(v3_a.normalized(), v3_a / v3_a.length());
         assert_eq!(v3_b.normalized(), Vector::new([0.0, 0.0, 0.0]));
         assert_eq!(v4_a.normalized(), v4_a / v4_a.length());
+    }
+
+    #[test]
+    fn matrix_add_sub_test() {
+        let a = Matrix::new([
+            [1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+        ]);
+        let b = Matrix::new([
+            [1.5, 2.5, 3.5],
+            [4.5, 5.5, 6.5],
+        ]);
+        let c = Matrix::new([
+            [2.5, 4.5, 6.5],
+            [8.5, 10.5, 12.5],
+        ]);
+
+        assert_eq!(a + b, c);
+        assert_eq!(c - b, a);
+        assert_eq!(c - a, b);
+
+        let mut a2 = a;
+        let mut c2 = c;
+        let mut c3 = c;
+
+        a2 += b;
+        c2 -= b;
+        c3 -= a;
+
+        assert_eq!(a2, c);
+        assert_eq!(c2, a);
+        assert_eq!(c3, b);
+    }
+
+    #[test]
+    fn matrix_scaling_test() {
+        let v2_a = Matrix::new([[1.0, 1.0]]);
+        let v3_a = Matrix::new([[1.0, 2.0, 3.5]]);
+        let v4_a = Matrix::new([[3.0, 4.0], [5.0, -6.0]]);
+
+        assert_eq!(v2_a * 2.0, Matrix::new([[2.0, 2.0]]));
+        assert_eq!(v2_a / 3.0, Matrix::new([[1.0 / 3.0, 1.0 / 3.0]]));
+
+        assert_eq!(v3_a * 2.0, Matrix::new([[2.0, 4.0, 3.5 * 2.0]]));
+        assert_eq!(v3_a / 3.0, Matrix::new([[1.0 / 3.0, 2.0 / 3.0, 3.5 / 3.0]]));
+
+        assert_eq!(
+            v4_a * 2.0,
+            Matrix::new([[3.0 * 2.0, 4.0 * 2.0], [5.0 * 2.0, -6.0 * 2.0]])
+        );
+        assert_eq!(
+            v4_a / 3.0,
+            Matrix::new([[3.0 / 3.0, 4.0 / 3.0], [5.0 / 3.0, -6.0 / 3.0]])
+        );
+
+        let mut v2_a_2 = v2_a;
+        let mut v2_a_3 = v2_a;
+
+        v2_a_2 *= 2.0;
+        v2_a_3 /= 3.0;
+
+        assert_eq!(v2_a_2, Matrix::new([[2.0, 2.0]]));
+        assert_eq!(v2_a_3, Matrix::new([[1.0 / 3.0, 1.0 / 3.0]]));
+
+        let mut v3_a_2 = v3_a;
+        let mut v3_a_3 = v3_a;
+
+        v3_a_2 *= 2.0;
+        v3_a_3 /= 3.0;
+
+        assert_eq!(v3_a_2, Matrix::new([[2.0, 4.0, 3.5 * 2.0]]));
+        assert_eq!(v3_a_3, Matrix::new([[1.0 / 3.0, 2.0 / 3.0, 3.5 / 3.0]]));
+
+        let mut v4_a_2 = v4_a;
+        let mut v4_a_3 = v4_a;
+
+        v4_a_2 *= 2.0;
+        v4_a_3 /= 3.0;
+
+        assert_eq!(
+            v4_a_2,
+            Matrix::new([[3.0 * 2.0, 4.0 * 2.0], [5.0 * 2.0, -6.0 * 2.0]])
+        );
+        assert_eq!(
+            v4_a_3,
+            Matrix::new([[3.0 / 3.0, 4.0 / 3.0], [5.0 / 3.0, -6.0 / 3.0]])
+        );
+    }
+
+    #[test]
+    fn matrix_multiply_test() {
+        let mat_a = Matrix::new([
+            [1.0, 2.0, 3.0],
+            [5.0, 6.0, 7.0],
+        ]);
+        let mat_b = Matrix::new([
+            [0.1, 0.2],
+            [0.3, 0.4],
+            [0.5, 0.6],
+        ]);
+
+        let res = mat_a.matmul(&mat_b);
+
+        assert_eq!(
+            res,
+            Matrix::new([
+                [(1.0 * 0.1 + 2.0 * 0.3 + 3.0 * 0.5), (1.0 * 0.2 + 2.0 * 0.4 + 3.0 * 0.6)],
+                [(5.0 * 0.1 + 6.0 * 0.3 + 7.0 * 0.5), (5.0 * 0.2 + 6.0 * 0.4 + 7.0 * 0.6)],
+            ]),
+        );
     }
 }
