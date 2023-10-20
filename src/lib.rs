@@ -1,5 +1,5 @@
-pub mod vector;
 pub mod matrix;
+pub mod vector;
 
 pub use vector::Vector;
 pub type Vector2 = Vector<2, f32>;
@@ -169,18 +169,9 @@ mod tests {
 
     #[test]
     fn matrix_add_sub_test() {
-        let a = Matrix::new([
-            [1.0, 2.0, 3.0],
-            [4.0, 5.0, 6.0],
-        ]);
-        let b = Matrix::new([
-            [1.5, 2.5, 3.5],
-            [4.5, 5.5, 6.5],
-        ]);
-        let c = Matrix::new([
-            [2.5, 4.5, 6.5],
-            [8.5, 10.5, 12.5],
-        ]);
+        let a = Matrix::new([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]);
+        let b = Matrix::new([[1.5, 2.5, 3.5], [4.5, 5.5, 6.5]]);
+        let c = Matrix::new([[2.5, 4.5, 6.5], [8.5, 10.5, 12.5]]);
 
         assert_eq!(a + b, c);
         assert_eq!(c - b, a);
@@ -256,23 +247,22 @@ mod tests {
 
     #[test]
     fn matrix_multiply_test() {
-        let mat_a = Matrix::new([
-            [1.0, 2.0, 3.0],
-            [5.0, 6.0, 7.0],
-        ]);
-        let mat_b = Matrix::new([
-            [0.1, 0.2],
-            [0.3, 0.4],
-            [0.5, 0.6],
-        ]);
+        let mat_a = Matrix::new([[1.0, 2.0, 3.0], [5.0, 6.0, 7.0]]);
+        let mat_b = Matrix::new([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]]);
 
         let res = mat_a.matmul(&mat_b);
 
         assert_eq!(
             res,
             Matrix::new([
-                [(1.0 * 0.1 + 2.0 * 0.3 + 3.0 * 0.5), (1.0 * 0.2 + 2.0 * 0.4 + 3.0 * 0.6)],
-                [(5.0 * 0.1 + 6.0 * 0.3 + 7.0 * 0.5), (5.0 * 0.2 + 6.0 * 0.4 + 7.0 * 0.6)],
+                [
+                    (1.0 * 0.1 + 2.0 * 0.3 + 3.0 * 0.5),
+                    (1.0 * 0.2 + 2.0 * 0.4 + 3.0 * 0.6)
+                ],
+                [
+                    (5.0 * 0.1 + 6.0 * 0.3 + 7.0 * 0.5),
+                    (5.0 * 0.2 + 6.0 * 0.4 + 7.0 * 0.6)
+                ],
             ]),
         );
     }

@@ -1,6 +1,6 @@
-use std::mem::MaybeUninit;
 use std::borrow::Borrow;
-use std::ops::{Add, Sub, AddAssign, SubAssign, Mul, Div, MulAssign, DivAssign, Index, IndexMut};
+use std::mem::MaybeUninit;
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Sub, SubAssign};
 
 use crate::Vector;
 
@@ -133,8 +133,7 @@ where
     V: Borrow<Matrix<N, M, T>>,
 {
     fn add_assign(&mut self, rhs: V) {
-        self
-            .0
+        self.0
             .iter_mut()
             .flatten()
             .zip(rhs.borrow().0.iter().flatten())
@@ -150,8 +149,7 @@ where
     V: Borrow<Matrix<N, M, T>>,
 {
     fn sub_assign(&mut self, rhs: V) {
-        self
-            .0
+        self.0
             .iter_mut()
             .flatten()
             .zip(rhs.borrow().0.iter().flatten())
@@ -212,13 +210,10 @@ where
     S: Borrow<T>,
 {
     fn mul_assign(&mut self, rhs: S) {
-        self
-            .0
+        self.0
             .iter_mut()
             .flatten()
-            .for_each(|res| {
-                *res *= rhs.borrow()
-            });
+            .for_each(|res| *res *= rhs.borrow());
     }
 }
 impl<const N: usize, const M: usize, T, S> DivAssign<S> for Matrix<N, M, T>
@@ -228,13 +223,10 @@ where
     S: Borrow<T>,
 {
     fn div_assign(&mut self, rhs: S) {
-        self
-            .0
+        self.0
             .iter_mut()
             .flatten()
-            .for_each(|res| {
-                *res /= rhs.borrow()
-            });
+            .for_each(|res| *res /= rhs.borrow());
     }
 }
 
