@@ -20,6 +20,15 @@ impl<const N: usize, const M: usize, T> Matrix<N, M, T> {
         &self.0
     }
 
+    /// Returns a slice of the matrix elements (row-major)
+    #[inline(always)]
+    pub fn elements(&self) -> &[T] {
+        // This should be fine. As self.data() returns a reference, we can
+        // assume the pointer is non-null and aligned even it the size is 0.
+        // The lifetime is also fine.
+        unsafe { std::slice::from_raw_parts(self.data() as *const [T; M] as *const T, N * M) }
+    }
+
     #[inline(always)]
     pub const fn num_rows(&self) -> usize {
         N
