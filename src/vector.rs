@@ -226,7 +226,7 @@ where
         self.0
             .iter()
             .zip(other.as_ref().0.iter())
-            .map(|(a, b)| a.clone() * b.clone())
+            .map(|(a, b)| a * b)
             .sum()
     }
 }

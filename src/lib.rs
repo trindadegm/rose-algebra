@@ -10,6 +10,65 @@ pub use matrix::Matrix;
 pub type Matrix3 = Matrix<3, 3, f32>;
 pub type Matrix4 = Matrix<4, 4, f32>;
 
+#[rustfmt::skip]
+pub mod m4 {
+    use super::*;
+
+    pub const IDENTITY: Matrix4 = Matrix4::new([
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]);
+    pub const X: Matrix4 = Matrix4::new([
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+    ]);
+    pub const Y: Matrix4 = Matrix4::new([
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+    ]);
+    pub const Z: Matrix4 = Matrix4::new([
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+    ]);
+    pub const W: Matrix4 = Matrix4::new([
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]);
+    pub const ZERO: Matrix4 = Matrix4::new([
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+    ]);
+
+    pub fn scale(vector: &Vector4) -> Matrix4 {
+        let mut matrix = ZERO;
+        matrix[(0, 0)] = *vector.x();
+        matrix[(1, 1)] = *vector.y();
+        matrix[(2, 2)] = *vector.z();
+        matrix[(3, 3)] = *vector.w();
+        matrix
+    }
+
+    pub fn translate(vector: &Vector3) -> Matrix4 {
+        let mut matrix = IDENTITY;
+        matrix[(0, 3)] = *vector.x();
+        matrix[(1, 3)] = *vector.y();
+        matrix[(2, 3)] = *vector.z();
+        matrix
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
