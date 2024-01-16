@@ -16,7 +16,7 @@ impl<const N: usize, const M: usize, T> Matrix<N, M, T> {
 
     /// Returns a reference to the array of matrix elements.
     #[inline(always)]
-    pub fn data(&self) -> &[[T; M]; N] {
+    pub const fn data(&self) -> &[[T; M]; N] {
         &self.0
     }
 

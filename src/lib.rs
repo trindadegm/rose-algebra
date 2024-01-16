@@ -62,10 +62,23 @@ pub mod m4 {
 
     pub fn translate(vector: &Vector3) -> Matrix4 {
         let mut matrix = IDENTITY;
-        matrix[(0, 3)] = *vector.x();
-        matrix[(1, 3)] = *vector.y();
-        matrix[(2, 3)] = *vector.z();
+        matrix[(3, 0)] = *vector.x();
+        matrix[(3, 1)] = *vector.y();
+        matrix[(3, 2)] = *vector.z();
         matrix
+    }
+
+    pub fn rotate_axis(axis: &Vector3, angle: f32) -> Matrix4 {
+        let sin_angle = f32::sin(angle);
+        let cos_angle = f32::cos(angle);
+        let axis_k_matrix = Matrix4::new([
+            [0.0, *axis.z(), -*axis.y(), 0.0],
+            [-*axis.z(), 0.0, *axis.x(), 0.0],
+            [*axis.y(), -*axis.x(), 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+        ]);
+        let rot_matrix = IDENTITY + (axis_k_matrix * sin_angle) + (axis_k_matrix.matmul(&axis_k_matrix) * (1.0 - cos_angle));
+        rot_matrix
     }
 }
 
