@@ -2,7 +2,7 @@ use std::{
     borrow::Borrow,
     iter::Sum,
     mem::MaybeUninit,
-    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign, Index, IndexMut},
 };
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
@@ -24,6 +24,20 @@ impl<const N: usize, T> Vector<N, T> {
     #[inline(always)]
     pub fn take_data(self) -> [T; N] {
         self.0
+    }
+}
+impl<const N: usize, T> Index<usize> for Vector<N, T> {
+    type Output = T;
+
+    #[inline(always)]
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.0[index]
+    }
+}
+impl<const N: usize, T> IndexMut<usize> for Vector<N, T> {
+    #[inline(always)]
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.0[index]
     }
 }
 impl<const N: usize, T> Default for Vector<N, T>
