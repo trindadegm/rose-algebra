@@ -5,6 +5,8 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign, Index, IndexMut},
 };
 
+use crate::Matrix;
+
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 #[repr(transparent)]
 pub struct Vector<const N: usize, T>([T; N]);
@@ -337,6 +339,17 @@ impl<const N: usize, T> AsRef<[T; N]> for Vector<N, T> {
     #[inline(always)]
     fn as_ref(&self) -> &[T; N] {
         self.data()
+    }
+}
+impl<const N: usize, T> From<Matrix<N, 1, T>> for Vector<N, T>
+where T: Default + Copy,
+{
+    fn from(value: Matrix<N, 1, T>) -> Self {
+        let mut data = [T::default(); N];
+        for (i, value) in value.data().iter().enumerate() {
+            data[i] = value[0];
+        }
+        Self::new(data)
     }
 }
 

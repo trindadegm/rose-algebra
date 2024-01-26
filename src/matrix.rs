@@ -67,7 +67,7 @@ where
                 let ncols = TryInto::<isize>::try_into(M).unwrap();
                 for i in 0..nrows {
                     for j in 0..ncols {
-                        elem_ptr.offset(i * nrows + j).write(T::default());
+                        elem_ptr.offset(i * ncols + j).write(T::default());
                     }
                 }
                 data.assume_init()
