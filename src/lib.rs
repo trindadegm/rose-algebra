@@ -81,11 +81,21 @@ pub mod m4 {
         rot_matrix
     }
 
-    pub fn standard_projection(viewport_scale_hpv: f32, near: f32, far: f32) -> Matrix4 {
+    pub fn simple_projection(viewport_scale_hpv: f32, near: f32, far: f32) -> Matrix4 {
         let far_near_dif = far - near;
         Matrix4::new([
             [viewport_scale_hpv, 0.0, 0.0, 0.0],
             [0.0, -1.0, 0.0, 0.0],
+            [0.0, 0.0, -far/far_near_dif, -(far * near)/far_near_dif],
+            [0.0, 0.0, -1.0, 0.0],
+        ])
+    }
+
+    pub fn standard_projection(viewport_scale_hpv: f32, fov_cotan: f32, near: f32, far: f32) -> Matrix4 {
+        let far_near_dif = far - near;
+        Matrix4::new([
+            [viewport_scale_hpv * fov_cotan, 0.0, 0.0, 0.0],
+            [0.0, -fov_cotan, 0.0, 0.0],
             [0.0, 0.0, -far/far_near_dif, -(far * near)/far_near_dif],
             [0.0, 0.0, -1.0, 0.0],
         ])
