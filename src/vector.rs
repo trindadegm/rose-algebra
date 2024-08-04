@@ -2,7 +2,7 @@ use std::{
     borrow::Borrow,
     iter::Sum,
     mem::MaybeUninit,
-    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign, Index, IndexMut},
+    ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Sub, SubAssign},
 };
 
 use crate::Matrix;
@@ -342,7 +342,8 @@ impl<const N: usize, T> AsRef<[T; N]> for Vector<N, T> {
     }
 }
 impl<const N: usize, T> From<Matrix<N, 1, T>> for Vector<N, T>
-where T: Default + Copy,
+where
+    T: Default + Copy,
 {
     fn from(value: Matrix<N, 1, T>) -> Self {
         let mut data = [T::default(); N];

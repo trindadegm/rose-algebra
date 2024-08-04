@@ -364,12 +364,7 @@ mod tests {
             [9.0, 10.0, 11.0, 12.0],
             [13.0, 14.0, 15.0, 16.0],
         ]);
-        let mat_b = Matrix::new([
-            [1.0],
-            [2.0],
-            [3.0],
-            [4.0],
-        ]);
+        let mat_b = Matrix::new([[1.0], [2.0], [3.0], [4.0]]);
 
         let res = mat_a.matmul(&mat_b);
         assert_eq!(
