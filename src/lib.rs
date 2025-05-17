@@ -77,8 +77,7 @@ pub mod m4 {
             [-*axis.y(), *axis.x(), 0.0, 0.0],
             [0.0, 0.0, 0.0, 0.0],
         ]);
-        let rot_matrix = IDENTITY + (axis_k_matrix * sin_angle) + (axis_k_matrix.matmul(&axis_k_matrix) * (1.0 - cos_angle));
-        rot_matrix
+        IDENTITY + (axis_k_matrix * sin_angle) + (axis_k_matrix.matmul(&axis_k_matrix) * (1.0 - cos_angle))
     }
 
     pub fn simple_projection(viewport_scale_hpv: f32, near: f32, far: f32) -> Matrix4 {
